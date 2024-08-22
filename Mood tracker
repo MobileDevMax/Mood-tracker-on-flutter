@@ -1,0 +1,91 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Mood tracker',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const MoodTracker(),
+    );
+  }
+}
+
+class MoodTracker extends StatefulWidget {
+  const MoodTracker({Key? key}) : super(key: key);
+
+  @override
+  _MoodTrackerState createState() => _MoodTrackerState();
+}
+
+class _MoodTrackerState extends State<MoodTracker> {
+  List<String> moods = ["Happy", "Normal", "Sad", "Angry"];
+  String? selectedMood;
+  List<String> moodHistory = [];
+
+  void updateMood(String mood) {
+    setState(() {
+      selectedMood = mood;
+      moodHistory.add(mood);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Mood tracker'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Choose your mood:',
+              style: TextStyle(fontSize: 18),
+            ),
+            const SizedBox(height: 16),
+            ...moods.map((mood) {
+              return ListTile(
+                title: Text(mood),
+                leading: Radio<String>(
+                  value: mood,
+                  groupValue: selectedMood,
+                  onChanged: (value) {
+                    if (value != null) {
+                      updateMood(value);
+                    }
+                  },
+                ),
+              );
+            }).toList(),
+            const SizedBox(height: 32),
+            const Text(
+              'History of moods:',
+              style: TextStyle(fontSize: 18),
+            ),
+            const SizedBox(height: 8),
+            ...moodHistory.map((mood) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                child: Text(
+                  mood,
+                  style: const TextStyle(fontSize: 16),
+                ),
+              );
+            }).toList(),
+          ],
+        ),
+      ),
+    );
+  }
+}
